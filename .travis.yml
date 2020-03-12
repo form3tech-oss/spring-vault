@@ -1,42 +1,37 @@
 language: java
-
 jdk:
-  - openjdk12
-
+- openjdk12
 sudo: required
-
 env:
   matrix:
-    - VAULT_VER=0.6.5
-    - VAULT_VER=0.7.0
-    - VAULT_VER=0.7.3
-    - VAULT_VER=0.8.0
-    - VAULT_VER=0.8.3
-    - VAULT_VER=0.9.0
-    - VAULT_VER=0.9.6
-    - VAULT_VER=0.10.4
-    - VAULT_VER=0.11.6
-    - VAULT_VER=1.0.3
-    - VAULT_VER=1.1.5
-    - VAULT_VER=1.2.4
-    - VAULT_VER=1.3.2
-    - EDITION=enterprise VAULT_VER=0.11.0
-
+  - VAULT_VER=0.6.5
+  - VAULT_VER=0.7.0
+  - VAULT_VER=0.7.3
+  - VAULT_VER=0.8.0
+  - VAULT_VER=0.8.3
+  - VAULT_VER=0.9.0
+  - VAULT_VER=0.9.6
+  - VAULT_VER=0.10.4
+  - VAULT_VER=0.11.6
+  - VAULT_VER=1.0.3
+  - VAULT_VER=1.1.5
+  - VAULT_VER=1.2.4
+  - VAULT_VER=1.3.2
+  - EDITION=enterprise VAULT_VER=0.11.0
+  global:
+  - secure: huZ7Ni2n7aAVfqnUJPqNjzOZ8Sb8tnXPNdwfZsoHx9hfTKgEB20IxdUUUKf/itBgg26V3H/O1QHks6+HF97XELu2TQvevy/lYUYlIvagpPOxdcniqYYb0x75DkJ0C6xdKn0BGjpyyVpUqeeIH5opRIntsr/lbr9P/4tsXO+sVgtfRb/uamGjJ8RXYF5ul07vjv+BVJ7kIPnZYVfw7SpT0dASQ9cU531wsTiUoLkdNoq0XKvIgUOELFOx1zBVICy04SsibnKM1qjJHIkwpD2XdvHVAZXCAGdOC2GvK8b373kq/2PqOJfEiHT1NCg7rlfq0ZX6CdwuvRIOv5JSbaK7jTAFN7RIXvn7wgxZWb4IyDzXx0SBOxjZ8cidyDK1Tc1PO6tVr8DKXykhUCJlMt9GNuSNoDLMSu5TToFLUm+NpCMZcipBR4lmhiAFYoRfHtqBovA+lGHkhizZwlI/Sc/zK08xWxT9JkkQlEO1ZHuzvrEh5abOLDIjpJSEtYHn+ap1zcehgPpeonHhTV+gjLcBmc6sUdYtYcXkqyxkkjfWDCtus/xoV0w7aKU21ggGsj9Q3X8jyIM7D+FGUnigSfZGOiQefEiVyovitynQu99iAASkDFZhkstCAwreZkgh4ak4MLgUFeHYRFIniqvlH+9HrRUZyrtf6UtW2SAskWDY6WE=
+  - secure: ZlpDMZLBnSp2fBcrZuegaq189+5fK7xXfE4q7AxgjSrLld/5I+KBB7FO7CQGZmDOqYLaIKw89BCpKWEh/oXaKRDiFpQBksqLd3D6FrVjPv6myUlc6gTDv/czywdJ+07xe102pIknXEH3xrUxz3WNQ/hsu7MYPX21fn8v+BX7j6zl5gFJ540u0IJvPpqxR+IciDJWrlsdMF6OuXbKrstY3wUsFVusGJpAeOnH5kBdxCF9LMXbNoPVuwwSefn4yEgVs/OY6t5QGgAnTfHFuhnvtLIXvCdVRNleUBLmBg+l1QMpY3mCiIB1GEZhFoKqOeSDOm4TEoc0nsErY3a+o+14miZ+qxO2pzp4lI9CyW1xD5I/owNn10hYp3xweBLXVDvdyOP2G++QTgksTaQAV0fd3CYsnoLocrOJ5T6HpcmsAL0zzB0e5eMs9al7kOvR80xYe8TVurd8iwjA8Y1rlx+zhBo9GU39Yx+/heJEey14LEbLpxodD878308JWhTp/dqUFHt99dK8zHcqO7kqzmo9qplaX/VaZekyrby5bDry4ErXmCOF8etsMjozVoD4eX802muyjbnzU5SnP2iDew7d12FmnPO7IjR4j2twloBxuGFQf/Dj2TGL+pMy1nwXME/JzcwvXLiNzCR9wBKC8UmXQkH2o0cff6MGVNktMf1QfRI=
 before_install:
-  - test ! -f ~/.m2/settings.xml || rm ~/.m2/settings.xml
-
+- test ! -f ~/.m2/settings.xml || rm ~/.m2/settings.xml
 install:
-  - src/test/bash/minikube_ci_initialize.sh
-  - src/test/bash/local_run_k8s.sh "./minikube" "./kubectl"
-  - src/test/bash/start.sh
-
-script: ./mvnw clean verify -DMINIKUBE_IP=$(./minikube ip) -P${PROFILE:-ci}
-
+- src/test/bash/minikube_ci_initialize.sh
+- src/test/bash/local_run_k8s.sh "./minikube" "./kubectl"
+- src/test/bash/start.sh
+script: "./mvnw clean verify -DMINIKUBE_IP=$(./minikube ip) -P${PROFILE:-ci}"
 after_script:
-  - pkill vault
-
+- pkill vault
 cache:
   directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.m2/wrapper'
-    - 'download'
+  - "$HOME/.m2/repository"
+  - "$HOME/.m2/wrapper"
+  - download
