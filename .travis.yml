@@ -1,42 +1,13 @@
-language: java
-
-jdk:
-  - openjdk12
-
-sudo: required
-
-env:
-  matrix:
-    - VAULT_VER=0.6.5
-    - VAULT_VER=0.7.0
-    - VAULT_VER=0.7.3
-    - VAULT_VER=0.8.0
-    - VAULT_VER=0.8.3
-    - VAULT_VER=0.9.0
-    - VAULT_VER=0.9.6
-    - VAULT_VER=0.10.4
-    - VAULT_VER=0.11.6
-    - VAULT_VER=1.0.3
-    - VAULT_VER=1.1.5
-    - VAULT_VER=1.2.4
-    - VAULT_VER=1.3.2
-    - EDITION=enterprise VAULT_VER=0.11.0
-
 before_install:
-  - test ! -f ~/.m2/settings.xml || rm ~/.m2/settings.xml
-
-install:
-  - src/test/bash/minikube_ci_initialize.sh
-  - src/test/bash/local_run_k8s.sh "./minikube" "./kubectl"
-  - src/test/bash/start.sh
-
-script: ./mvnw clean verify -DMINIKUBE_IP=$(./minikube ip) -P${PROFILE:-ci}
-
-after_script:
-  - pkill vault
-
-cache:
-  directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.m2/wrapper'
-    - 'download'
+- pip install --user awscli
+- export PATH=$PATH:$HOME/.local/bin
+env:
+  global:
+  - AWS_DEFAULT_REGION=eu-west-1
+  - AWS_REGION=eu-west-1
+  - AWS_SECRET_ACCESS_KEY=fake_secret
+  - secure: lyddf7/o/6HTIJkrgag8rbbrfOCPLJhSrPboUFC21XmPSpWpMDS/75sVKnXkI8iaJcfPglVcHndlxst0QpncPnc9j1hfh8KX4TG4JYC4OEpoczaqV7HmCf58pJhRXsFNiKqlu4QzUWKUbQfT0rSVchAy8pd9g/i3ZKuhUDHkGh83hucfwyKRMFnzFpaThsCcaCAaDlmJpdWTBSYUsq5aXIL/uN4h1Ny/y8qEzxsvZyToM/sv6T6tQIMb3sHW2midZm9BWOKkIIn9pdNnqPIUYman/oMqjpLAAQ/5Ys49KwEd3PWHOFPqgxAbmzEW7HUVXlaSZMdajzCkOAYQJGoo+8iXxkhriPY+0N53lXxnN3eIj6yQWQh/T0Vx88HGsEm48DGY53YCdesfK58apefg4ALEXnL0Fdf/1GNNsJpZPY6WN8bo0gxPSu1gpbkpFtc6mVsGow/fh1jC6K1l+t9+7bGu8vnwOoi/HN0AsW1KikNDK6TqtBBrI+k7PxByBBzafSRceDaUgVwC6yurb/qofOIy46rnSyZVTCgusHSjv7i85xrDAWh4ggwgdFHXglSNCAfZG4xh/qFPxxiPw4YWRX4Sn0BmdjDT+buAvvxhE73zk5aW90Y9tYedfQD1kvGBqHWok90nfY18J+yxKxB9xNq7anbRX+sWNVvtaAC2oSE=
+  - secure: Yf406dqWUuURInwj1Rva+PB/F/WiIkrrgtV7SCvTE+B2edWop1QAOMPF5Dnu9qnwK4jWSRLcisxsjdeBzJVhs+6aXedknEcIv9gKXC2RIYrJeLknfbMz+CZ16OWELrOh2EgU9/yT3q7scpMbmTHw1BFM5p/kNiRNbtuZRs3dtZhWUS0m+eKaAABwafjIX9tPRto1NROANU0FclLX+y62ZUx3aA/+RAey3ihD1akg3Xgv1lyVUfrLAfjSpMYDiHowpZcIyczXMrkFjb7N8SWbMpkAH8PdGjhawKLvXAyOm5jiSjWm3BP6XQhgk1+el+hokUwXD2hh9O66CvAf48Gs9TgTHuyCGtAT9DV2f0j/UtEOyPDjaqqbJJnNXDs1Wkj9Cyhf94EpqU9TCMK5vwU9jys+AHoWKxgfUlcV29ljH2bPR7NRT0lHAN8UzMMFIaV3OQTd05AXz4gPYK2VqTgxwGBOTHa7PtUwEQwwPH1M3UhpGxFrmLEOCYbmZrfFAs3myD5fCusTPA/+aVwrMfJIuTUIy02/dJYydib5eSgFRpFwuo+xeDhmDcHgfaH5NF3XU5s8Ng50I1ero5M7/JxzqK4l3FFvORIaDtNA0R+9KBsUeTvQzUQvdef1aF1WvQA6UauGfqEgC1IFJ1+EH2nAq7wuatvCTLUyrfzyZ8j8pu0=
+script:
+- env | grep AWS >> ./env.txt && cat ./env.txt
+- aws configure list
